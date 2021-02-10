@@ -495,7 +495,10 @@ class FileManager extends Plugin {
     if (file.indexOf('localhost') === 0) {
       return this._deps.filesProviders.localhost
     }
-    return this._deps.filesProviders.browser
+    if (file.indexOf('browser') === 0) {
+      return this._deps.filesProviders.browser
+    }
+    return this._deps.filesProviders.workspace
   }
 
   // returns the list of directories inside path

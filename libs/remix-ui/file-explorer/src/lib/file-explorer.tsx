@@ -115,13 +115,21 @@ export const FileExplorer = (props: FileExplorerProps) => {
         path: [],
         extension: ['.js'],
         pattern: []
+      },
+      {
+        id: 'setWorkspace',
+        name: 'Set as Workspace',
+        type: ['folder'],
+        path: [],
+        extension: [],
+        pattern: []
       }]
 
       setState(prevState => {
         return { ...prevState, fileManager, files, actions }
       })
     })()
-  }, [])
+  }, [name])
 
   useEffect(() => {
     if (state.fileManager) {
@@ -260,20 +268,20 @@ export const FileExplorer = (props: FileExplorerProps) => {
     return new Promise((resolve) => {
       filesProvider.resolveDirectory(folderPath, (error, fileTree) => {
         if (error) console.error(error)
-        const files = normalize(folderPath, fileTree)
+        const files = normalize(fileTree)
 
         resolve(files)
       })
     })
   }
 
-  const normalize = (path, filesList): File[] => {
+  const normalize = (filesList): File[] => {
     const folders = []
     const files = []
-    const prefix = path.split('/')[0]
 
     Object.keys(filesList || {}).forEach(key => {
-      const path = prefix + '/' + key
+      let path = filesProvider.type + '/' + key
+      path = path.replace(/^\/|\/$/g, '') // remove first and last slash
 
       if (filesList[key].isDirectory) {
         folders.push({
@@ -679,6 +687,11 @@ export const FileExplorer = (props: FileExplorerProps) => {
     })
   }
 
+  const setWorkspace = async (path: string) => {
+    path = path.replace(/^\/|\/$/g, '') // remove first and last slash
+    plugin.call('fileExplorers', 'setWorkspace', path)
+  }
+
   const emitContextMenuEvent = (id: string, path: string) => {
     plugin.emit(id, path)
   }
@@ -918,6 +931,7 @@ export const FileExplorer = (props: FileExplorerProps) => {
               deletePath={deletePath}
               renamePath={editModeOn}
               publishToGist={publishToGist}
+              setWorkspace={setWorkspace}
               emit={emitContextMenuEvent}
               pageX={state.focusContext.x}
               pageY={state.focusContext.y}

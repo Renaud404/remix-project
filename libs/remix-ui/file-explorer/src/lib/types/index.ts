@@ -37,6 +37,7 @@ export interface FileExplorerContextMenuProps {
     hideContextMenu: () => void,
     publishToGist?: () => void,
     runScript?: (path: string) => void,
+    setWorkspace?: (path: string) => void,
     emit?: (id: string, path: string) => void,
     pageX: number,
     pageY: number,

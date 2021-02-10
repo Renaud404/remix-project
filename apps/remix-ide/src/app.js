@@ -147,6 +147,9 @@ class App {
     registry.put({ api: self._components.filesProviders.browser, name: 'fileproviders/browser' })
     self._components.filesProviders.localhost = new RemixDProvider(self.appManager)
     registry.put({ api: self._components.filesProviders.localhost, name: 'fileproviders/localhost' })
+    self._components.filesProviders.workspace = new FileProvider('')
+    registry.put({ api: self._components.filesProviders.workspace, name: 'fileproviders/workspace' })
+    
     registry.put({ api: self._components.filesProviders, name: 'fileproviders' })
 
     migrateFileSystem(self._components.filesProviders.browser)
