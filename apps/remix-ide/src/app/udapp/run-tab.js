@@ -28,7 +28,7 @@ const profile = {
   version: packageJson.version,
   permission: true,
   events: ['newTransaction'],
-  methods: ['createVMAccount', 'sendTransaction', 'getAccounts', 'pendingTransactionsCount', 'getSettings']
+  methods: ['createVMAccount', 'sendTransaction', 'getAccounts', 'pendingTransactionsCount', 'getSettings', 'setAccount', 'setEnvironmentMode']
 }
 
 export class RunTab extends ViewPlugin {
@@ -59,12 +59,20 @@ export class RunTab extends ViewPlugin {
       else {
         resolve({
           selectedAccount: this.settingsUI.getSelectedAccount(),
-          selectedEnvMode: this.container.querySelector('#selectExEnvOptions').selectedOptions[0].value,
+          selectedEnvMode: this.blockchain.getProvider(),
           networkEnvironment: this.container.querySelector('*[data-id="settingsNetworkEnv"]').textContent
         }
         )
       }
     })
+  }
+
+  setAccount (account) {
+    this.settingsUI.setSelectedAccount(account)
+  }
+
+  setEnvironmentMode (env) {
+    this.settingsUI.setExecutionContext(env)
   }
 
   createVMAccount (newAccount) {
